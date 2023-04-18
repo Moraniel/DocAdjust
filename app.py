@@ -14,6 +14,8 @@ def upload_file():
         f = request.files['file']
         print(f.content_type)
 
+
+        # Tentando ler o tipo de arquivo atráves do content_type
         try:
             if f.content_type == 'text/csv':
                 dados = pd.read_csv(BytesIO(f.read()))
@@ -25,9 +27,11 @@ def upload_file():
             print(e)
             return "Erro ao processar o arquivo."
 
+        # transformando os dados em uma lista de dicinário
         dados_dict = dados.to_dict(orient="records")
         print(type(dados_dict))
 
+        # essa parte do código se refere à uma alteração que o GEPLAN solicitou
         for i in dados_dict:
             for chave in list(i.keys()):
                 if chave == 'Deliberações gerenciais;':
@@ -35,6 +39,7 @@ def upload_file():
                 if chave == 'Diretor (a)/Coordenador (a) e ou Gerente:':
                     i['Nome Diretor (a)/ Coordenador(a) e ou Gerente:'] = i.pop(chave)
 
+        # A partir daqui é a escrita do arquivo  
         DOCUMENTO = docx.Document()
     
         sec = DOCUMENTO.sections
@@ -45,17 +50,19 @@ def upload_file():
             section.right_margin = Cm(1)
 
         for i in dados_dict:
-
+            
+            # removendo esse valor do dicinário
             if "Carimbo de data/hora" in i.keys():
                 del i["Carimbo de data/hora"]
 
+            # título para cada resposta do setor 
             DOCUMENTO.add_heading(f"Respostas da {i['Identificação da Unidade/Gerência:']}", 0)
 
             for k, v in i.items():
                 if (str(v) != "nan"):
                     DOCUMENTO.add_heading(f"{k}", level=1)
                     DOCUMENTO.add_paragraph(f"{v}")
-                    
+        
         with tempfile.NamedTemporaryFile(suffix='.docx', delete=False) as output:
             DOCUMENTO.save(output)
             return send_file(output.name)
