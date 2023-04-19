@@ -6,7 +6,7 @@ GePy é um projeto para processar arquivos no formato ``.xlsx`` e ``.csv`` que c
 1. Certifique-se de ter Python 3.7 ou superior instalado em sua máquina. Navegue até a pasta raiz do projeto GePy no terminal e instale o ``Flask``, ``pandas``, ``openpyxl`` e ``python-docx`` usando o pip. Abra o terminal e digite o seguinte comando:
 
 ```s
-pip install flask pandas openpyxl python-docx
+pip install -q flask pandas openpyxl python-docx
 ```
 
 2. Digite o seguinte comando para executar o aplicativo Flask:
