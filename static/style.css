@@ -19,12 +19,11 @@ label {
   font-weight: bold;
 }
 
-input[type="file"],
-input[type="text"] {
+input[type="file"] {
   border-radius: 5px;
-  padding: 5px;
+  padding: 9px;
   border: none;
-  width: 200px;
+  width: 300px;
   margin-bottom: 10px;
 }
 
