@@ -19,7 +19,7 @@ O servidor será iniciado e o aplicativo estará disponível em ``http://127.0.0
 ## Uso:
 
 1. Acesse o aplicativo em ``http://127.0.0.1:5000``
-2. Clique no botão "Escolher arquivo" para selecionar o arquivo .xlsx ou .csv que contém as respostas do formulário.
+2. Clique no botão "Escolher arquivo" para selecionar o arquivo ``.xlsx`` ou ``.csv`` que contém as respostas do formulário.
 3. Clique no botão "Enviar" para enviar o arquivo.
 4. O arquivo será processado e um documento ``.docx`` será gerado com as respostas do formulário.
 5. Clique no botão "Baixar" para baixar o documento ``.docx`` gerado.
