@@ -12,8 +12,9 @@
     <img src="{{ url_for('static', filename='brasao-ufal.png') }}" alt="Logo">
     <h1 class="center">Gerência de Planejamento – GEPLAN</h1>
     <form method="POST" enctype="multipart/form-data" class="form-style">
-      <input type="file" name="file"  /><br /><br />
-      <input type="submit"  value="GERAR RELATÓRIO" />
+      <label for="file">Selecionar arquivo</label>
+      <input type="file" accept=".csv, .xlsx" name="file" /><br /><br />
+      <input type="submit" value="GERAR RELATÓRIO" />
     </form>
     <footer>
       <div class="container">
