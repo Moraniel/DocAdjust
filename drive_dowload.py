@@ -1,9 +1,12 @@
 
-import io, docx
+import io, docx, os
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 from urllib.parse import urlparse, parse_qs
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+
 
 #Credenciais do Google Drive API
 SCOPES = ['https://www.googleapis.com/auth/drive']
@@ -55,6 +58,22 @@ def merge_dic(dict1, list2):
 
 # Receve um link do drive e retorna baixa o arquivo para pegar as informações      
 def dowload_file(file_link):
+    creds = None
+
+    # Verificar se as credenciais existem
+    if os.path.exists('token.env'):
+        creds = Credentials.from_authorized_user_file('token.env', SCOPES)
+
+    # Se as credenciais não existirem ou estiverem expiradas, solicitar ao usuário que faça login
+    if not creds or not creds.valid:
+        flow = InstalledAppFlow.from_client_secrets_file(
+            'client_secret.env', SCOPES)
+        creds = flow.run_local_server(port=0)
+
+        # Salvar as credenciais para uso posterior
+        with open('token.env', 'w') as token:
+            token.write(creds.to_json())
+
     # Crie o objeto da API do Google Drive
     service = build('drive', 'v3', credentials=creds)
 
