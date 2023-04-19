@@ -3,6 +3,13 @@
 * {
   font-family: "Roboto", sans-serif;
 }
+
+img {
+  margin-top: 50px;
+  width: 80px; 
+  height: 110px;
+}
+
 .center {
   text-align: center;
 }
