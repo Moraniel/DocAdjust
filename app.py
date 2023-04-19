@@ -12,8 +12,6 @@ processed_file = None
 def upload_file():
     if request.method == 'POST':
         f = request.files['file']
-        print(f.content_type)
-
 
         # Tentando ler o tipo de arquivo atráves do content_type
         try:
@@ -29,7 +27,6 @@ def upload_file():
 
         # transformando os dados em uma lista de dicinário
         dados_dict = dados.to_dict(orient="records")
-        print(type(dados_dict))
 
         # essa parte do código se refere à uma alteração que o GEPLAN solicitou
         for i in dados_dict:
