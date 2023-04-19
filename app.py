@@ -1,8 +1,9 @@
 from flask import Flask, request, render_template, send_file
-import pandas as pd
-import docx
+from drive_dowload import dowload_file, ler_word, merge_dic
 from docx.shared import Cm
 from io import BytesIO
+import pandas as pd
+import docx , re
 import tempfile
 
 app = Flask(__name__)
@@ -25,14 +26,23 @@ def upload_file():
             print(e)
             return "Erro ao processar o arquivo."
 
+
         # transformando os dados em uma lista de dicinário
         dados_dict = dados.to_dict(orient="records")
-<<<<<<< HEAD
-        print(type(dados_dict))
-        
-=======
-
->>>>>>> 9d562201a6af5386c11744dc070f8ab247937442
+        # cria um dicionario temporario para salvar as novas informações
+        new_dados_dict = []
+        for i in dados_dict:
+            
+            for k, v in i.items():
+                # Vai realizar um reges para procurar arquivos drive no csv
+                match_link = re.search(r'https://drive\.google\.com/.*[?&]id=([a-zA-Z0-9_-]+)',str(v))
+                if (str(v) != "nan") and (match_link):
+                    file_name = dowload_file(str(v))
+                    dados_word= ler_word(file_name)
+                    i=merge_dic(i,dados_word)
+                    new_dados_dict.append(i)
+        dados_dict = new_dados_dict
+                    
         # essa parte do código se refere à uma alteração que o GEPLAN solicitou
         for i in dados_dict:
             for chave in list(i.keys()):
@@ -61,9 +71,11 @@ def upload_file():
             DOCUMENTO.add_heading(f"Respostas da {i['Identificação da Unidade/Gerência:']}", 0)
 
             for k, v in i.items():
+               
                 if (str(v) != "nan"):
                     DOCUMENTO.add_heading(f"{k}", level=1)
                     DOCUMENTO.add_paragraph(f"{v}")
+                    
         
         with tempfile.NamedTemporaryFile(suffix='.docx', delete=False) as output:
             DOCUMENTO.save(output)
