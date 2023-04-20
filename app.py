@@ -26,9 +26,9 @@ def upload_file():
             print(e)
             return "Erro ao processar o arquivo."
 
-
         # transformando os dados em uma lista de dicinário
         dados_dict = dados.to_dict(orient="records")
+
         # cria um dicionario temporario para salvar as novas informações
         # new_dados_dict = []
 
