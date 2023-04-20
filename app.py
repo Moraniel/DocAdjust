@@ -30,18 +30,19 @@ def upload_file():
         # transformando os dados em uma lista de dicinário
         dados_dict = dados.to_dict(orient="records")
         # cria um dicionario temporario para salvar as novas informações
-        new_dados_dict = []
-        for i in dados_dict:
+        # new_dados_dict = []
+
+        # for i in dados_dict:
             
-            for k, v in i.items():
-                # Vai realizar um reges para procurar arquivos drive no csv
-                match_link = re.search(r'https://drive\.google\.com/.*[?&]id=([a-zA-Z0-9_-]+)',str(v))
-                if (str(v) != "nan") and (match_link):
-                    file_name = dowload_file(str(v))
-                    dados_word= ler_word(file_name)
-                    i=merge_dic(i,dados_word)
-                    new_dados_dict.append(i)
-        dados_dict = new_dados_dict
+        #     for k, v in i.items():
+        #         # Vai realizar um reges para procurar arquivos drive no csv
+        #         match_link = re.search(r'https://drive\.google\.com/.*[?&]id=([a-zA-Z0-9_-]+)',str(v))
+        #         if (str(v) != "nan") and (match_link):
+        #             file_name = dowload_file(str(v))
+        #             dados_word= ler_word(file_name)
+        #             i=merge_dic(i,dados_word)
+        #             new_dados_dict.append(i)
+        # dados_dict = new_dados_dict
                     
         # essa parte do código se refere à uma alteração que o GEPLAN solicitou
         for i in dados_dict:
