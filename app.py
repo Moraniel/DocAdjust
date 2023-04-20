@@ -13,6 +13,7 @@ processed_file = None
 def upload_file():
     if request.method == 'POST':
         f = request.files['file']
+        print(f.content_type)
 
         # Tentando ler o tipo de arquivo atráves do content_type
         try:
@@ -20,6 +21,8 @@ def upload_file():
                 dados = pd.read_csv(BytesIO(f.read()))
             elif f.content_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
                 dados = pd.read_excel(BytesIO(f.read()))
+            elif f.content_type == 'application/octet-stream':
+                dados = pd.read_excel(BytesIO(f.read()), engine="odf")
             else:
                 raise Exception(f'Tipo de arquivo "{f.content_type}" não suportado.')
         except Exception as e:
