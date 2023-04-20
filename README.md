@@ -11,7 +11,7 @@ A documentação pode ser acessada [aqui]()
 
 ## Instalação e execução:
 
-1. Certifique-se de ter Python 3.7 ou superior instalado em sua máquina. Navegue até a pasta raiz do projeto GePy no terminal, abra o terminal e digite o seguinte comando:
+1. Certifique-se de ter Python 3.7 ou superior instalado em sua máquina. Navegue até a pasta raiz do projeto GePy no terminal e digite o seguinte comando:
 
 ```s
 pip install -r requirements.txt
