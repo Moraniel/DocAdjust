@@ -1,4 +1,4 @@
-## Introdução:
+# GePy
 
 <div align="center">
 		<img src="https://user-images.githubusercontent.com/118611278/233367698-d5da373d-b861-45fb-85c3-0f2747f50829.png" alt="Imagem">
