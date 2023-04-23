@@ -1,10 +1,12 @@
 from flask import Flask, request, render_template, send_file
-from drive_dowload import dowload_file, ler_word, merge_dic
+from drive_dowload import dowload_file
 from docx.shared import Cm
 from io import BytesIO
+from auxiliares.leituraEscritaWord import ler_arquivo_baixado
 import pandas as pd
-import docx , re
+import docx 
 import tempfile
+# import re
 
 app = Flask(__name__)
 processed_file = None
@@ -77,9 +79,14 @@ def upload_file():
             for k, v in i.items():
                
                 if (str(v) != "nan"):
-                    DOCUMENTO.add_heading(f"{k}", level=1)
+                    DOCUMENTO.add_heading(f"{k}", 1)
                     DOCUMENTO.add_paragraph(f"{v}")
-                    
+
+                    if ("Arquivo em PDF ou Documento (word ou odf)" in k):
+                        DOCUMENTO.add_heading(f"Conteúdo do arquivo anexado pela {i['Identificação da Unidade/Gerência:']}", 1)
+                        arquivo = dowload_file(str(v))
+                        parent = docx.Document(arquivo)
+                        ler_arquivo_baixado(parent, DOCUMENTO)
         
         with tempfile.NamedTemporaryFile(suffix='.docx', delete=False) as output:
             DOCUMENTO.save(output)
