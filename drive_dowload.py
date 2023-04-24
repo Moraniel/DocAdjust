@@ -1,4 +1,3 @@
-
 import io, docx, os
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
@@ -6,6 +5,7 @@ from googleapiclient.http import MediaIoBaseDownload
 from urllib.parse import urlparse, parse_qs
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
+import tempfile
 
 
 #Credenciais do Google Drive API
@@ -77,17 +77,29 @@ def dowload_file(file_link):
     # Crie o objeto da API do Google Drive
     service = build('drive', 'v3', credentials=creds)
 
-    # ID do arquivo que você deseja baixar
-    url_components = urlparse(file_link)
-    query_params = parse_qs(url_components.query)
+    parsed_url = urlparse(file_link)
+    file_id = ""
+    # Verifica se a URL é do tipo "open?id="
+    if "open?id=" in file_link:
+        # Extrai o ID do arquivo
+        file_id = parsed_url.query.split("=")[1]
+        
+    # Verifica se a URL é do tipo "d/"
+    elif "/d/" in file_link:
+        # Extrai o ID do arquivo
+        file_id = parsed_url.path.split("/")[-2]
 
-    # Obtenha o valor do parâmetro 'id' da consulta
-    file_id = query_params['id'][0]
+    # # ID do arquivo que você deseja baixar
+    # url_components = urlparse(file_link)
+    # query_params = parse_qs(url_components.query)
+
+    # # Obtenha o valor do parâmetro 'id' da consulta
+    # file_id = query_params['id'][0]
 
 
     # Recupere informações do arquivo
     file = service.files().get(fileId=file_id).execute()
-
+   
     # Nome do arquivo
     filename = file['name']
 
@@ -100,7 +112,11 @@ def dowload_file(file_link):
     done = False
     while done is False:
         status, done = downloader.next_chunk()
-        print("Download %d%%." % int(status.progress() * 100))
+
+    # with tempfile.NamedTemporaryFile(suffix='.docx', delete=False) as output:
+    #     output.write(file_content.getbuffer())
+    
+    # return output.name
 
     # Salvar o arquivo no disco
     with open(filename, 'wb') as f:
