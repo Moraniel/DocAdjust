@@ -39,6 +39,7 @@ def ler_arquivo_baixado(parent, DOCUMENTO):
 
             # Cria uma nova tabela no documento e preenche com os dados da tabela original
             table_new = DOCUMENTO.add_table(rows=len(tabelas)+1, cols=len(col_names))
+            table_new.style = 'Table Grid'
             hdr_cells = table_new.rows[0].cells
             for j, k in enumerate(col_names):
                 hdr_cells[j].text = k
