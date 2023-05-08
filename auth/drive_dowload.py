@@ -12,7 +12,7 @@ import tempfile
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
 # Arquivo de credinciais IMPORTANTE(O email nas credencias tem que ter acesso aos arquivos do csv)
-SERVICE_ACCOUNT_FILE = r'auth\credentials.env'
+SERVICE_ACCOUNT_FILE = r'auth\credentials.json'
 
 creds = service_account.Credentials.from_service_account_file(
     SERVICE_ACCOUNT_FILE, scopes=SCOPES)
@@ -22,17 +22,17 @@ def dowload_file(file_link):
     creds = None
 
     # Verificar se as credenciais existem
-    if os.path.exists(r"auth\token.env"):
-        creds = Credentials.from_authorized_user_file(r"auth\token.env", SCOPES)
+    if os.path.exists(r"auth\token.json"):
+        creds = Credentials.from_authorized_user_file(r"auth\token.json", SCOPES)
 
     # Se as credenciais não existirem ou estiverem expiradas, solicitar ao usuário que faça login
     if not creds or not creds.valid:
         flow = InstalledAppFlow.from_client_secrets_file(
-            r"auth\client_secret.env", SCOPES)
+            r"auth\client_secret.json", SCOPES)
         creds = flow.run_local_server(port=0)
 
         # Salvar as credenciais para uso posterior
-        with open(r"auth\token.env", 'w') as token:
+        with open(r"auth\token.json", 'w') as token:
             token.write(creds.to_json())
 
     # Crie o objeto da API do Google Drive
