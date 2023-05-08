@@ -1,12 +1,12 @@
 from flask import Flask, request, render_template, send_file
-from drive_dowload import dowload_file
+from auth.drive_dowload import dowload_file
+from auxiliary.leituraEscritaWord import read_file
+from auxiliary.rename import rename
 from docx.shared import Cm
 from io import BytesIO
-from auxiliares.leituraEscritaWord import ler_arquivo_baixado
 import pandas as pd
 import docx 
 import tempfile
-# import re
 
 app = Flask(__name__)
 processed_file = None
@@ -15,7 +15,6 @@ processed_file = None
 def upload_file():
     if request.method == 'POST':
         f = request.files['file']
-        print(f.content_type)
 
         # Tentando ler o tipo de arquivo atráves do content_type
         try:
@@ -33,29 +32,8 @@ def upload_file():
 
         # transformando os dados em uma lista de dicinário
         dados_dict = dados.to_dict(orient="records")
-
-        # cria um dicionario temporario para salvar as novas informações
-        # new_dados_dict = []
-
-        # for i in dados_dict:
-            
-        #     for k, v in i.items():
-        #         # Vai realizar um reges para procurar arquivos drive no csv
-        #         match_link = re.search(r'https://drive\.google\.com/.*[?&]id=([a-zA-Z0-9_-]+)',str(v))
-        #         if (str(v) != "nan") and (match_link):
-        #             file_name = dowload_file(str(v))
-        #             dados_word= ler_word(file_name)
-        #             i=merge_dic(i,dados_word)
-        #             new_dados_dict.append(i)
-        # dados_dict = new_dados_dict
                     
-        # essa parte do código se refere à uma alteração que o GEPLAN solicitou
-        for i in dados_dict:
-            for chave in list(i.keys()):
-                if chave == 'Deliberações gerenciais;':
-                    i['Atribuições do setor:'] = i.pop(chave)
-                if chave == 'Diretor (a)/Coordenador (a) e ou Gerente:':
-                    i['Nome Diretor (a)/ Coordenador(a) e ou Gerente:'] = i.pop(chave)
+        rename(dados_dict)
 
         # A partir daqui é a escrita do arquivo  
         DOCUMENTO = docx.Document()
@@ -83,10 +61,13 @@ def upload_file():
                     DOCUMENTO.add_paragraph(f"{v}")
 
                     if ("Arquivo em PDF ou Documento (word ou odf)" in k):
-                        DOCUMENTO.add_heading(f"Conteúdo do arquivo anexado pela {i['Identificação da Unidade/Gerência:']}", 1)
-                        arquivo = dowload_file(str(v))
-                        parent = docx.Document(arquivo)
-                        ler_arquivo_baixado(parent, DOCUMENTO)
+                        try:
+                            DOCUMENTO.add_heading(f"Conteúdo do arquivo anexado pela {i['Identificação da Unidade/Gerência:']}", 1)
+                            file = dowload_file(str(v))
+                            parent = docx.Document(file)
+                            read_file(parent, DOCUMENTO)
+                        except Exception as e:
+                            return "Erro ao realizar a autenticação"
         
         with tempfile.NamedTemporaryFile(suffix='.docx', delete=False) as output:
             DOCUMENTO.save(output)

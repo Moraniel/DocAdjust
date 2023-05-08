@@ -5,7 +5,7 @@ from docx.table import _Cell, Table
 from docx.text.paragraph import Paragraph
 import docx
 
-def ler_arquivo_baixado(parent, DOCUMENTO):
+def read_file(parent, DOCUMENTO):
     # Verifica o tipo do elemento pai e seleciona o elemento apropriado
     if isinstance(parent, Document):
         parent_elm = parent.element.body
