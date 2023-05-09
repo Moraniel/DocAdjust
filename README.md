@@ -6,9 +6,6 @@
 
 GePy é um projeto para processar arquivos no formato ``.xlsx``, ``.csv`` e ``.ods`` que contêm respostas de um formulário do Google Forms e gerar um documento no formato ``.docx`` com as respostas.
 
-## Documentação:
-A documentação pode ser acessada [aqui]()
-
 ## Instalação e execução:
 
 1. Certifique-se de ter Python 3.7 ou superior instalado em sua máquina. Navegue até a pasta raiz do projeto GePy no terminal e digite o seguinte comando:
@@ -17,7 +14,9 @@ A documentação pode ser acessada [aqui]()
 pip install -r requirements.txt
 ```
 
-2. Digite o seguinte comando para executar o aplicativo Flask:
+2. Para utilizar a API do Google Drive em seu projeto, é necessário seguir alguns passos importantes. Primeiramente, realize o cadastro no Google Cloud Platform. Em seguida, crie um projeto e ative a API do Google Drive em seu painel de controle. Por fim, baixe os arquivos ``credentials`` e ``client_secret`` e salve-os na pasta "auth"
+
+3. Digite o seguinte comando para executar o aplicativo Flask:
 
 ```s
 python app.py
