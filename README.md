@@ -26,10 +26,10 @@ O servidor será iniciado e o aplicativo estará disponível em ``http://127.0.0
 ## Uso:
 
 1. Acesse o aplicativo em ``http://127.0.0.1:5000``
-2. Clique no botão "Escolher arquivo" para selecionar o arquivo ``.xlsx``, ``.csv`` ou ``.ods`` que contém as respostas do formulário.
-3. Clique no botão "Enviar" para enviar o arquivo.
-4. O arquivo será processado e um documento ``.docx`` será gerado com as respostas do formulário.
-5. Clique no botão "Baixar" para baixar o documento ``.docx`` gerado.
+2. Clique no botão ``Escolher arquivo ``para selecionar o arquivo ``.xlsx``, ``.csv`` ou ``.ods`` que contém as respostas do formulário.
+3. Clique no botão ``abrir`` para enviar o arquivo.
+4. Clique em ``Gerar relatório`` O arquivo será processado e um documento ``.docx`` será gerado com as respostas do formulário.
+5. Clique no botão ``Baixar`` para baixar o documento ``.docx`` gerado.
 
 ## Limitações:
 * O projeto suporta apenas arquivos ``.xlsx``, ``.csv`` e ``.ods`` gerados pelo Google Planilha contendo as respostas do formulário. Outros formatos de arquivo podem não ser processados corretamente.
