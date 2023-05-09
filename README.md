@@ -14,7 +14,7 @@ GePy é um projeto para processar arquivos no formato ``.xlsx``, ``.csv`` e ``.o
 pip install -r requirements.txt
 ```
 
-2. Para utilizar a API do Google Drive nesse projeto, é necessário seguir alguns passos importantes. Primeiramente, realize o cadastro no Google Cloud Platform. Em seguida, crie um projeto e ative a API do Google Drive em seu painel de controle. Por fim, baixe os arquivos ``credentials`` e ``client_secret`` e salve-os na pasta "auth"
+2. Para utilizar a API do Google Drive nesse projeto, é necessário seguir alguns passos importantes. Primeiramente, realize o cadastro no Google Cloud Platform. Em seguida, crie um projeto e ative a API do Google Drive em seu painel de controle. Por fim, baixe os arquivos ``credentials`` e ``client_secret`` e salve-os na pasta ``auth``
 
 3. Digite o seguinte comando para executar o aplicativo Flask:
 
