@@ -1,3 +1,5 @@
+from pdf2docx import Converter
+from pathlib import Path
 from flask import Flask, request, render_template, send_file
 from auth.drive_dowload import dowload_file
 from auxiliary.leituraEscritaWord import read_file
@@ -64,7 +66,18 @@ def upload_file():
                         try:
                             DOCUMENTO.add_heading(f"Conteúdo do arquivo anexado pela {i['Identificação da Unidade/Gerência:']}", 1)
                             file = dowload_file(str(v))
-                            parent = docx.Document(file)
+
+                            # pegando a extensão do arquivo
+                            ext = Path(file).suffix.lower()
+
+                            if (ext == ".pdf"):
+                                cv = Converter(file)
+                                cv.convert("doc.docx")      
+                                cv.close()
+                                parent = docx.Document("doc.docx")
+                            elif (ext == '.docx'):
+                                parent = docx.Document(file)
+
                             read_file(parent, DOCUMENTO)
                         except Exception as e:
                             return "Erro ao realizar a autenticação"
