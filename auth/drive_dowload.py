@@ -1,5 +1,6 @@
 import io
 import os
+from pathlib import Path
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
@@ -66,7 +67,9 @@ def dowload_file(file_link):
     while done is False:
         status, done = downloader.next_chunk()
 
-    with tempfile.NamedTemporaryFile(suffix='.docx', delete=False) as output:
+    ext = Path(filename).suffix.lower()
+
+    with tempfile.NamedTemporaryFile(suffix=ext, delete=False) as output:
         output.write(file_content.getbuffer())
     return output.name
 
