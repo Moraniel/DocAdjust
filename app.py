@@ -15,75 +15,83 @@ processed_file = None
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
-    if request.method == 'POST':
-        f = request.files['file']
+    # Cria um objeto Document
+    document = docx.Document()
 
-        # Tentando ler o tipo de arquivo atráves do content_type
+    # Define as margens do documento
+    margins = {"top_margin": Cm(1), "bottom_margin": Cm(1), "left_margin": Cm(1), "right_margin": Cm(1)}
+    for section in document.sections:
+        for margin, value in margins.items():
+            setattr(section, margin, value)
+
+    if request.method == 'POST':
+        # Lê o arquivo enviado pelo formulário
+        file = request.files.get('file')
+        if not file:
+            return "Erro: nenhum arquivo enviado."
+
+        # Lê o arquivo com base no seu tipo
         try:
-            if f.content_type == 'text/csv':
-                dados = pd.read_csv(BytesIO(f.read()))
-            elif f.content_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-                dados = pd.read_excel(BytesIO(f.read()))
-            elif f.content_type == 'application/octet-stream':
-                dados = pd.read_excel(BytesIO(f.read()), engine="odf")
+            if file.content_type == 'text/csv':
+                dados = pd.read_csv(BytesIO(file.read()))
+            elif file.content_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                dados = pd.read_excel(BytesIO(file.read()))
+            elif file.content_type == 'application/octet-stream':
+                dados = pd.read_excel(BytesIO(file.read()), engine="odf")
             else:
-                raise Exception(f'Tipo de arquivo "{f.content_type}" não suportado.')
+                raise Exception(f'Tipo de arquivo "{file.content_type}" não suportado.')
         except Exception as e:
             print(e)
             return "Erro ao processar o arquivo."
 
-        # transformando os dados em uma lista de dicinário
+        # Converte os dados em uma lista de dicionários
         dados_dict = dados.to_dict(orient="records")
-                    
+        
+        # Renomeia as chaves dos dicionários
         rename(dados_dict)
 
-        # A partir daqui é a escrita do arquivo  
-        DOCUMENTO = docx.Document()
-    
-        sec = DOCUMENTO.sections
-        for section in sec:
-            section.top_margin = Cm(1)
-            section.bottom_margin = Cm(1)
-            section.left_margin = Cm(1)
-            section.right_margin = Cm(1)
-
+        # Processa cada dicionário
         for i in dados_dict:
-            
-            # removendo esse valor do dicinário
-            if "Carimbo de data/hora" in i.keys():
-                del i["Carimbo de data/hora"]
+            # Remove a chave "Carimbo de data/hora"
+            i.pop("Carimbo de data/hora", None)
 
-            # título para cada resposta do setor 
-            DOCUMENTO.add_heading(f"Respostas da {i['Identificação da Unidade/Gerência:']}", 0)
+            # Adiciona um título para cada resposta do setor
+            document.add_heading(f"Respostas da {i['Identificação da Unidade/Gerência:']}", 0)
 
+            # Processa cada chave e valor do dicionário
             for k, v in i.items():
-               
-                if (str(v) != "nan"):
-                    DOCUMENTO.add_heading(f"{k}", 1)
-                    DOCUMENTO.add_paragraph(f"{v}")
+                # Verifica se o valor não é NaN
+                if not pd.isna(v):
+                    document.add_heading(f"{k}", 1)
+                    document.add_paragraph(f"{v}")
 
-                    if ("Arquivo em PDF ou Documento (word ou odf)" in k):
+                    # Verifica se a chave é "Arquivo em PDF ou Documento (word ou odf)"
+                    if k == "Arquivo em PDF ou Documento (word ou odf)":
                         try:
-                            DOCUMENTO.add_heading(f"Conteúdo do arquivo anexado pela {i['Identificação da Unidade/Gerência:']}", 1)
-                            file = dowload_file(str(v))
+                            document.add_heading(f"Conteúdo do arquivo anexado pela {i['Identificação da Unidade/Gerência:']}", 1)
+                            file_content = dowload_file(str(v))
 
-                            # pegando a extensão do arquivo
-                            ext = Path(file).suffix.lower()
+                            # Verifica a extensão do arquivo
+                            file_extension = Path(file_content).suffix.lower()
 
-                            if (ext == ".pdf"):
-                                cv = Converter(file)
+                            if file_extension == ".pdf":
+                                # Converte o PDF em um arquivo Word
+                                cv = Converter(file_content)
                                 cv.convert("doc.docx")      
                                 cv.close()
                                 parent = docx.Document("doc.docx")
-                            elif (ext == '.docx'):
-                                parent = docx.Document(file)
+                            elif file_extension == '.docx':
+                                # Lê o arquivo Word
+                                parent = docx.Document(file_content)
 
-                            read_file(parent, DOCUMENTO)
+                            # Adiciona o conteúdo do arquivo ao documento principal
+                            read_file(parent, document)
                         except Exception as e:
                             return "Erro ao realizar a autenticação"
         
+        # Salva o documento em um arquivo temporário e envia para o usuário
         with tempfile.NamedTemporaryFile(suffix='.docx', delete=False) as output:
-            DOCUMENTO.save(output)
+            document.save(output)
             return send_file(output.name)
         
     return render_template('index.html')
