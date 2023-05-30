@@ -111,4 +111,4 @@ def download_file():
         return "Nenhum arquivo processado encontrado."
     
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
