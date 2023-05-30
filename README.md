@@ -6,6 +6,9 @@
 
 GePy é um projeto para processar arquivos no formato ``.xlsx``, ``.csv`` e ``.ods`` que contêm respostas de um formulário do Google Forms e gerar um documento no formato ``.docx`` com as respostas.
 
+## Documentação da ferramenta 
+Acesse [aqui](https://docs.google.com/document/d/1zAiHAyw8MmFyLksNwUHrfvKcYeDx9xkxPptJIFL-MI0/edit?usp=share_link) o documentação da ferramenta
+
 ## Instalação e execução:
 
 1. Certifique-se de ter Python 3.7 ou superior instalado em sua máquina. Navegue até a pasta raiz do projeto GePy no terminal e digite o seguinte comando:
